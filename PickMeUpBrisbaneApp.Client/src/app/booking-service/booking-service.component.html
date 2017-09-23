@@ -1,2 +1,153 @@
-<mwl-calendar-month-view [viewDate]="viewDate" [events]="events">
-</mwl-calendar-month-view>
+<md-progress-bar mode="indeterminate" color="Warn" *ngIf="isBusy"></md-progress-bar>
+
+<ng-template #modalContent let-close="close">
+    <md-progress-bar mode="indeterminate" color="Warn" *ngIf="isBusy"></md-progress-bar>
+    <div *ngIf="isServerError">
+        <br/>
+        <div style="text-align:center " class="alert alert-danger">
+            {{serverErrorMessage}}
+        </div>
+    </div>
+    <form #f="ngForm" name="registerForm" (ngSubmit)="SaveNewEvent(f.value, f.valid)">
+        <div class="modal-header">
+            <h5 class="modal-title">{{modalData?.book.title}} </h5>
+            <button type="button" class="close" (click)="close()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+        </div>
+        <div class="modal-body">
+
+            <h3>PickUp Details</h3>
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="control-group form-group">
+                        <div class="controls">
+                            <label for="FullName">Full Name:</label>
+                            <input type="text" class="form-control" id="FullName" name="FullName" #FullName="ngModel" placeholder="Full Name" [(ngModel)]="modalData.book.client.fullName" required>
+                            <div class="alert alert-danger" name="validName" *ngIf="!FullName.valid && f._submitted">Please enter your full name.</div>
+                        </div>
+                    </div>
+                    <div class="control-group form-group">
+                        <div class="controls">
+                            <label for="PhoneNumber">Phone Number:</label>
+                            <input type="tel" class="form-control" id="PhoneNumber" name="PhoneNumber" #PhoneNumber="ngModel" placeholder="phone Number" [(ngModel)]="modalData.book.client.phoneNumber" required>
+                            <div class="alert alert-danger" name="validPhone" *ngIf="!PhoneNumber.valid && f._submitted">Please enter your phone number or Email.</div>
+                        </div>
+                    </div>
+                    <div class="control-group form-group">
+                        <div class="controls">
+                            <label for="PickUpAddress">Pickup address:</label>
+                            <div class="controls  card h-100" style="padding:10px">
+                                <input type="text" class="form-control" id="PickUpAddress" #PickUpAddress="ngModel" name="PickUpAddress" placeholder="Unit, Street Number Street Name" [(ngModel)]="modalData.book.pickUpAddress" required>
+                                <div class="alert alert-danger" name="validPhone" *ngIf="!PickUpAddress.valid && f._submitted">Please enter the pickup address.</div>
+                                <label for="Suburb">Suburb / Airport:</label>
+                                <ng2-completer [(ngModel)]="modalData.book.pickUpSuburb" #PickUpSuburb="ngModel" placeholder="Suburb / Airport (Domestic or International)" inputClass="form-control" [datasource]="dataService" name="PickUpSuburb" id="PickUpSuburb" [minSearchLength]="3"
+                                    required></ng2-completer>
+                                <div class="alert alert-danger" name="validPickUpSuburb" *ngIf="!PickUpSuburb.valid && f._submitted">Please enter the pickup Suburb.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="control-group form-group">
+                        <div class="controls">
+                            <label for="DropOffAddress">Drop off address:</label>
+                            <div class="controls  card h-100" style="padding:10px">
+                                <input type="text" class="form-control" id="DropOffAddress" #DropOffAddress="ngModel" name="DropOffAddress" placeholder="Unit, Street Number Street Name" [(ngModel)]="modalData.book.dropOffAddress" required>
+                                <div class="alert alert-danger" name="validDropOffAddress" *ngIf="!DropOffAddress.valid && f._submitted">Please enter the drop off address.</div>
+                                <label for="Suburb">Suburb / Airport:</label>
+                                <ng2-completer [(ngModel)]="modalData.book.dropOffSuburb" placeholder="Suburb / Airport (Domestic or International)" #DropOffSuburb="ngModel" inputClass="form-control" [datasource]="dataService" name="DropOffSuburb" id="DropOffSuburb" [minSearchLength]="3"
+                                    required></ng2-completer>
+                                <div class="alert alert-danger" name="validDropOffSuburb" *ngIf="!DropOffSuburb.valid && f._submitted">Please enter the drop off Suburb.</div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+                <div class="col-lg-6 mb-4">
+                    <div class="control-group form-group">
+                        <div class="controls">
+                            <label for="Email">Email Address:</label>
+                            <input type="email" class="form-control" id="Email" name="Email" #Email="ngModel" placeholder="Email" [(ngModel)]="modalData.book.client.email" required>
+                            <div class="alert alert-danger" name="validEmail" *ngIf="!Email.valid && f._submitted">Please enter your phone number or Email.</div>
+                        </div>
+                    </div>
+                    <div class="control-group form-group">
+                        <div class="controls">
+                            <label for="PickupDate">Date and Time:</label>
+                            <app-date-time-picker [(ngModel)]="modalData.book.pickupDate" id="PickupDate" name="PickupDate" placeholder="Not set">
+                            </app-date-time-picker>
+                        </div>
+                    </div>
+                    <div class="control-group form-group">
+                        <div class="controls card h-100">
+
+                            <div class="checkbox">
+
+                                <label for="ShareRide" ngClass="{ 'btn-default': !ShareRide,  'btn-success': ShareRide }" ngbButtonLabel>
+                                        !! <b>I Want to make it a Carpool Service:</b>
+                                 </label>
+
+                                <input type="checkbox" [(ngModel)]="modalData.book.shareRide" id="ShareRide" #ShareRide="ngModel" name="ShareRide">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group form-group">
+                        <div class="controls">
+                            <label for="Message">Extra Details:</label>
+                            <textarea rows="10" cols="100" class="form-control" [(ngModel)]="modalData.book.message" id="Message" name="Message" maxlength="999" style="resize:none"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" (click)="close()">Cancel</button>
+            <button class="btn btn-primary" value="Register" type="submit">Save</button>
+        </div>
+    </form>
+</ng-template>
+
+<div class="row text-center">
+    <div class="col-md-4">
+        <div class="btn-group">
+            <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate">
+                Previous
+            </div>
+            <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate">
+                Today
+            </div>
+            <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate">
+                Next
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+        <button class="btn btn-primary pull-right" (click)="addEvent()">
+                    Book New Service!!
+        </button>
+
+
+    </div>
+    <div class="col-md-4">
+        <div class="btn-group">
+            <div class="btn btn-primary" (click)="view = 'month'" [class.active]="view === 'month'">
+                Month
+            </div>
+            <div class="btn btn-primary" (click)="view = 'week'" [class.active]="view === 'week'">
+                Week
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div [ngSwitch]="view">
+    <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events" [refresh]="refresh" [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)" (eventClicked)="handleEvent('EditEvent', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+    </mwl-calendar-month-view>
+    <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="events" [refresh]="refresh" (eventClicked)="handleEvent('EditEvent', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+    </mwl-calendar-week-view>
+</div>

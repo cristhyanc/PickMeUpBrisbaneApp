@@ -1,3 +1,8 @@
+import { AppErrorHandler } from './services/app-error-handler';
+import { MaterialModule, MdProgressBarModule, MdProgressSpinnerModule } from '@angular/material';
+import { ErrorHandler } from '@angular/core';
+import { BookingService } from './services/booking.service';
+import { HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AlertModule } from 'ngx-bootstrap';
@@ -14,6 +19,20 @@ import { NotFoundPageComponent } from './not-found-page/not-found-page.component
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CalendarModule } from 'angular-calendar';
 import { AppComponent } from './app.component';
+import { CalendarutilComponent } from './CalendarUtil/calendarutil.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import {
+  NgbDatepickerModule,
+  NgbTimepickerModule,
+  NgbModalModule,
+  NgbModule
+} from '@ng-bootstrap/ng-bootstrap';
+import { DateTimePickerComponent } from './date-time-picker/date-time-picker.component';
+import { Ng2CompleterModule } from 'ng2-completer';
+import { CommonDataComponent } from './common-data/common-data.component';
+
+
 
 @NgModule({
   declarations: [
@@ -22,16 +41,28 @@ import { AppComponent } from './app.component';
     LogInComponent,
     BookingServiceComponent,
     HomeComponent,
-    NotFoundPageComponent
+    NotFoundPageComponent,
+    CalendarutilComponent,
+    DateTimePickerComponent,
+    CommonDataComponent
   ],
   imports: [
+    NgbModule.forRoot(),
+    NgbModalModule.forRoot(),
+    FormsModule,
+    MaterialModule,
+    CommonModule,
+    HttpModule,
+    Ng2CompleterModule,
+    NgbDatepickerModule.forRoot(),
+    NgbTimepickerModule.forRoot(),
     BrowserModule,
     BsDropdownModule.forRoot(),
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
     AlertModule.forRoot(),
     AppRoutingModule,
-     BrowserAnimationsModule,
+    BrowserAnimationsModule,
     CalendarModule.forRoot(),
       RouterModule.forRoot([
       { path: '', redirectTo: 'Home', pathMatch: 'full' },
@@ -43,7 +74,12 @@ import { AppComponent } from './app.component';
 
     ])
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [
+    BookingService,
+    CommonDataComponent,
+    { provide: ErrorHandler, useClass: AppErrorHandler }
+  ],
+  bootstrap: [AppComponent],
+  exports: [CalendarutilComponent, DateTimePickerComponent]
 })
 export class AppModule { }
