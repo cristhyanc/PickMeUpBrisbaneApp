@@ -1,6 +1,6 @@
 <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="">PickMeUp</a>
+        <a class="navbar-brand" routerLink="/Home">PickMeUp</a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -10,21 +10,18 @@
                     <a class="nav-link" routerLink="/Home">Home</a>
                 </li>
                 <li class="nav-item" routerLinkActive="active">
-                    <a class="nav-link" routerLink="/booking">Booking</a>
+                    <a class="nav-link" routerLink="/Booking">Booking</a>
                 </li>
-                <li class="nav-item" routerLinkActive="active">
+                <li class="nav-item" routerLinkActive="active" *ngIf="!isLoggedin">
                     <a class="nav-link" routerLink="/Login">Login / Register</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPortfolio" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Cristhyan
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPortfolio" data-toggle="dropdown" *ngIf="isLoggedin" aria-haspopup="true" aria-expanded="false">
+                {{loggedUser?.name}}
               </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownPortfolio">
-                        <a class="dropdown-item" href="portfolio-1-col.html">1 Column Portfolio</a>
-                        <a class="dropdown-item" href="portfolio-2-col.html">2 Column Portfolio</a>
-                        <a class="dropdown-item" href="portfolio-3-col.html">3 Column Portfolio</a>
-                        <a class="dropdown-item" href="portfolio-4-col.html">4 Column Portfolio</a>
-                        <a class="dropdown-item" href="portfolio-item.html">Single Portfolio Item</a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownPortfolio" *ngIf="isLoggedin">
+                        <a class="dropdown-item">My Bookings</a>
+                        <a class="dropdown-item">Sign Out</a>
                     </div>
                 </li>
             </ul>

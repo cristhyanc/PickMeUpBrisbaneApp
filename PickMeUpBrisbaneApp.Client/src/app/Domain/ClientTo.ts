@@ -1,7 +1,7 @@
 export class ClientTo {
 
 email: string;
-fullName: string;
+name: string;
 phoneNumber: string;
 id: number;
 

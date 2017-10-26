@@ -17,7 +17,7 @@ namespace PickMeUpBrisbaneApp.Api.Models
         public bool ShareRide { get; set; }
         public string PickUpSuburb { get; set; }
         public string DropOffSuburb { get; set; }
-        public int ClientID { get; set; }
+        public long ClientID { get; set; }
 
         public string ValidateBook()
         {

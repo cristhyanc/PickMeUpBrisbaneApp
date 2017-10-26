@@ -83,6 +83,14 @@ namespace PickMeUpBrisbaneApp.Api.Controllers
             return result;
         }
 
+        [HttpGet("{clientID}")]
+        public Client GetClientDetails(long clientID)
+        {
+            var result = _context.Clients.Where(x => x.ID == clientID).FirstOrDefault();
+            return result;
+        }
+
+
         // POST api/values
         [HttpPost]
         public IActionResult  CreateBooking([FromBody]Booking value)
@@ -133,5 +141,40 @@ namespace PickMeUpBrisbaneApp.Api.Controllers
         public void Delete(int id)
         {
         }
+
+
+        // POST api/values
+        [HttpPost]
+        public IActionResult CreateUser([FromBody]Client  value)
+        {
+            try
+            {
+              
+                var validations = value.Validate();
+
+                if (string.IsNullOrEmpty(validations))
+                {
+                    if(_context.Clients.Where(x=> x.ID== value.ID || x.Email.Trim().ToUpper().Equals(value.Email.Trim().ToUpper())).FirstOrDefault() != null)
+                    {
+                        validations = "The user is already registered, try using different Email or Facebook account";
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(validations))
+                {
+                    return StatusCode(((int)HttpStatusCode.BadRequest), validations);
+                }
+                var result = _context.Clients.Add(value);
+                _context.SaveChanges();
+                return StatusCode(((int)HttpStatusCode.OK), result.Entity.ID);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(((int)HttpStatusCode.ExpectationFailed), ex.Message);
+                throw;
+            }
+
+        }
+
     }
 }

@@ -3,7 +3,7 @@ import { AppError } from '../services/app-error';
 import { concat } from 'rxjs/operator/concat';
 import { forEach } from '@angular/router/src/utils/collection';
 import { error } from 'util';
-import { CommonDataComponent } from '../common-data/common-data.component';
+import { CommonDataService } from '../services/common-data.service';
 import { ClientTo } from '../Domain/ClientTo';
 import { BookingService, ServiceErrorMessage } from '../services/booking.service';
 import {
@@ -91,9 +91,11 @@ export class BookingServiceComponent implements OnInit {
   isLoadingLocations = false;
   isLoadingBookings = false;
   protected dataService: CompleterData;
+canEdit: Boolean = false;
+
 
   constructor(private modal: NgbModal, private bookService: BookingService,
-    private completerService: CompleterService, private common: CommonDataComponent) {
+    private completerService: CompleterService, private common: CommonDataService) {
 
   }
 
@@ -202,7 +204,6 @@ export class BookingServiceComponent implements OnInit {
     newBook.title = '!! Shared Ride on ' + newBook.pickupDate;
     colorEvent = colors.yellow;
   }
-  newBook.client.id = 1;
   const newEvent: CalendarEvent = {
     title:  newBook.title,
     start: newBook.pickupDate,
@@ -250,6 +251,12 @@ export class BookingServiceComponent implements OnInit {
   }
 
   openModalWindows(action: string, book: BookTo): void {
+    this.canEdit = false;
+    console.log(book);
+    console.log(this.common);
+ if (this.common.Client.id === book.client.id) {
+   this.canEdit = true;
+ }
     this.isServerError = false;
     this.serverErrorMessage = '';
     this.modalData = { action, book, isError: true, errorMessage: '' };

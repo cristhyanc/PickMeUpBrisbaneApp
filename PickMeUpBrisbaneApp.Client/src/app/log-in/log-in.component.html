@@ -1,3 +1,59 @@
-<p>
-  log-in works!
-</p>
+<md-progress-bar mode="indeterminate" color="Warn" *ngIf="isBusy">
+</md-progress-bar>
+<div class="modal-body">
+
+
+    <div class="row">
+
+        <div class="col-lg-4 mb-4" *ngIf="isNotRegistered">
+            <h3>Personal Details</h3>
+            <div *ngIf="isServerError">
+                <br/>
+                <div style="text-align:center " class="alert alert-danger">
+                    {{serverErrorMessage}}
+                </div>
+            </div>
+            <form #f="ngForm" name="registerForm" (ngSubmit)="SaveNewClient(f.value, f.valid)">
+                <div class="control-group form-group">
+                    <div class="controls">
+                        <label for="name">Full Name:</label>
+                        <input type="text" class="form-control" id="name" name="name" #name="ngModel" placeholder="Full Name" [(ngModel)]="client.name" required>
+                        <div class="alert alert-danger" name="validName" *ngIf="!name.valid && f._submitted">Please enter your full name.</div>
+                    </div>
+                </div>
+                <div class="control-group form-group">
+                    <div class="controls">
+                        <label for="PhoneNumber">Phone Number:</label>
+                        <input type="tel" class="form-control" id="PhoneNumber" name="PhoneNumber" #PhoneNumber="ngModel" placeholder="phone Number" [(ngModel)]="client.phoneNumber" required>
+                        <div class="alert alert-danger" name="validPhone" *ngIf="!PhoneNumber.valid && f._submitted">Please enter your phone number.</div>
+                    </div>
+                </div>
+                <div class="control-group form-group">
+                    <div class="controls">
+                        <label for="Email">Email Address:</label>
+                        <input type="email" class="form-control" id="Email" name="Email" #Email="ngModel" placeholder="Email" [(ngModel)]="client.email" required>
+                        <div class="alert alert-danger" name="validEmail" *ngIf="!Email.valid && f._submitted">Please enter your Email.</div>
+                    </div>
+                </div>
+                <div class="control-group form-group">
+                    <div class="controls">
+                        <button type="button" class="btn btn-outline-secondary" type="reset">Clean Form</button>
+                        <button class="btn btn-primary" value="Register" type="submit">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-lg-2 mb-4">
+            <div class="control-group form-group" *ngIf="!isNotRegistered">
+                <div class="controls">
+                    <button (click)="loginWithFacebook()" class="btn btn-lg btn-primary btn-block">
+                            Login With Facebook
+                          </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

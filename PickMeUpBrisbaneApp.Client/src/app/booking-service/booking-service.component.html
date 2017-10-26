@@ -23,9 +23,9 @@
                 <div class="col-lg-6 mb-4">
                     <div class="control-group form-group">
                         <div class="controls">
-                            <label for="FullName">Full Name:</label>
-                            <input type="text" class="form-control" id="FullName" name="FullName" #FullName="ngModel" placeholder="Full Name" [(ngModel)]="modalData.book.client.fullName" required>
-                            <div class="alert alert-danger" name="validName" *ngIf="!FullName.valid && f._submitted">Please enter your full name.</div>
+                            <label for="name">Full Name:</label>
+                            <input type="text" class="form-control" id="name" name="name" #name="ngModel" placeholder="Full Name" [(ngModel)]="modalData.book.client.name" required>
+                            <div class="alert alert-danger" name="validName" *ngIf="!name.valid && f._submitted">Please enter your full name.</div>
                         </div>
                     </div>
                     <div class="control-group form-group">
@@ -106,7 +106,7 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-outline-secondary" (click)="close()">Cancel</button>
-            <button class="btn btn-primary" value="Register" type="submit">Save</button>
+            <button class="btn btn-primary" *ngIf="canEdit" value="Register" type="submit">Save</button>
         </div>
     </form>
 </ng-template>
@@ -127,10 +127,12 @@
     </div>
     <div class="col-md-4">
         <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
-        <button class="btn btn-primary pull-right" (click)="addEvent()">
+        <button *ngIf="common.Loggin" class="btn btn-primary pull-right" (click)="addEvent()">
                     Book New Service!!
         </button>
-
+        <div style="text-align:center " *ngIf="!common.Loggin" class="alert alert-danger">
+            Please, Login or register to book.
+        </div>
 
     </div>
     <div class="col-md-4">

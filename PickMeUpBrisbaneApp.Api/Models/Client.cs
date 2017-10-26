@@ -8,13 +8,13 @@ namespace PickMeUpBrisbaneApp.Api.Models
     public class Client
     {
         public string Email { get; set; }
-        public string FullName { get; set; }
+        public string Name { get; set; }
         public string PhoneNumber { get; set; }
-        public int ID { get; set; }
+        public long ID { get; set; }
 
         public string Validate()
         {
-            if(string.IsNullOrEmpty(FullName ))
+            if(string.IsNullOrEmpty(Name ))
             {
                 return "Customer's full name is mandatory";
             }

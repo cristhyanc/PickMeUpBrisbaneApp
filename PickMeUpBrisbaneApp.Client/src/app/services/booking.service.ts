@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs/Rx';
 import { BookTo } from '../Domain/BookTo';
+import { ClientTo } from '../Domain/ClientTo';
 import { Http, Response, Headers } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { error } from 'util';
@@ -41,9 +42,24 @@ private url = 'http://localhost:64258/api/Booking';
     .catch(this.handleError);
   }
 
+  getClientDetails(id: number) {
+    console.log(id);
+    const finalUrl = this.url + '/GetClientDetails/' + id;
+    console.log(finalUrl);
+    return this.http.get(finalUrl, {headers: this.headers })
+    .map( response => response.json())
+    .catch(this.handleError);
+  }
+
   createBooking(newBook: BookTo) {
     const finalUrl = this.url + '/CreateBooking';
     return this.http.post(finalUrl, newBook, {headers: this.headers } )
+    .catch(this.handleError);
+  }
+
+  createUser(newUser: ClientTo) {
+    const finalUrl = this.url + '/CreateUser';
+    return this.http.post(finalUrl, newUser, {headers: this.headers } )
     .catch(this.handleError);
   }
 
